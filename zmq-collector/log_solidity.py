@@ -11,7 +11,7 @@ sub_list = []
 def create_plot():
     columns = ['Transactions'] + names
     table = go.Figure(data=[go.Table(header=dict(values=columns),
-                                   cells=dict(values=[[]]))
+                                   cells=dict(values=[[]]*len(columns)))
                           ])
     return table
 
@@ -21,17 +21,19 @@ def update_plot(name, tx, is_solid):
     column_index = names.index(name) + 1
     if tx in table_data[0]:
         row_index = table.cells.values[0].index(tx)
-        table.cells.values[column_index][row_index] = is_solid
+        table.cells.values[column_index].insert(row_index, is_solid)
         all_true = table.cells.values[column_index].count(True) == len(names)
         if all_true:
             [elem.pop(row_index) for elem in table.cells.values]
     else:
-        table.cells.values[0].append(tx)
-        row_index = table.cells.values[0].index(tx)
-        print(table.cells.values)
+        table_data = list(table_data)
+        table_data[0].append(tx)
+        row_index = table_data[0].index(tx)
+        print(table_data)
         print(column_index)
         print(row_index)
-        table.cells.values[column_index][row_index] = is_solid
+        table_data[column_index].insert(row_index, is_solid)
+        table.cells.values = table_data
 
 
 
